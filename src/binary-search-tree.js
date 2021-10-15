@@ -89,56 +89,44 @@ module.exports = class BinarySearchTree {
     }
   }
 
+  remove(data) {
+    this.roots = this.removeNode(this.roots, data);
+  }
+  
+  removeNode(node, data) {
+    if(node === null) {
+      return null;
+    } else if(data < node.data) {
+      node.left = this.removeNode(node.left, data);
+      return node;
+    } else if(data > node.data) {
+      node.right = this.removeNode(node.right, data);
+      return node;
+    } else {
+        if(node.left === null && node.right === null) {
+          node = null;
+          return node;
+        }
+        if(node.left === null) {
+          node = node.right;
+          return node;
+        } else if(node.right === null) {
+          node = node.left;
+          return node;
+        }
+        let newNode = this.minNode(node.right);
+        node.data = newNode.data;
+        node.right = this.removeNode(node.right, newNode.data);
+        return node;
+    }
+  }
+
   minNode(node) {
     if (node.left === null) {
       return node;
     } else {
-      return this.min(node.left);
-    }
-  }
-
-  removeNode(node, data) {
-    if (this.roots === null) return null;
-    if (data < node.data) {
-      node.left = this.removeNode(node.left, data);
-      return node;
-    } else if (data > node.data) {
-      node.right = this.removeNode(node.right, data);
-      return node;
-    } else {
-      if (node.left === null && node.right === null) {
-        node = null;
-        return node;
-      }
-      if(node.left === null) {
-        node = node.right;
-        return node;
-      }
-      if(node.right === null) {
-        node = node.left;
-        return node;
-      }
-      let newNode = this.minNode(node.right);
-      node.data = newNode.data;
-      node.right = this.removeNode(node.right, newNode.data);
-      return node;
-    }
-  }
-
-  remove(data) {
-    this.roots = this.removeNode(this.roots, data);
-  }
-
-  min() {
-    if (this.roots === null) return null;
-    let current = this.roots;
-    while (current) {
-      if (current.left === null) {
-        return current.data;
-      } else {
-        current = current.left;
-      }
-    }
+      return this.minNode(node.left);
+    }  
   }
 
   max() {
@@ -149,6 +137,18 @@ module.exports = class BinarySearchTree {
         return current.data;
       } else {
         current = current.right;
+      }
+    }
+  }
+
+  min() {
+    if (this.roots === null) return null;
+    let current = this.roots;
+    while (current) {
+      if (current.left === null) {
+        return current.data;
+      } else {
+        current = current.left;
       }
     }
   }
